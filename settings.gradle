@@ -1,0 +1,5 @@
+rootProject.name = 'sme-gras'
+include 'berry'
+include 'presley'
+include 'example'
+

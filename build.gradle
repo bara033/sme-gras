@@ -1,0 +1,62 @@
+plugins {
+    id 'java-library'
+    id 'idea'
+    id 'maven-publish'
+}
+
+group 'sme.gras'
+version '1.0-SNAPSHOT'
+
+
+subprojects {
+    group = 'com.sonymusic.gras'
+    version = rootProject.version
+    applyPlugins(it)
+
+    repositories {
+        maven {
+            url "https://nexus3t-vpn.smeperforce.com/repository/sme-gras/"
+        }
+        maven {
+            url "https://nexus3t-vpn.smeperforce.com/repository/maven-public/"
+        }
+        maven {
+            url "https://nexus3t-vpn.smeperforce.com/repository/maven-snapshots/"
+        }
+    }
+
+    idea {
+        module {
+            outputDir file("$buildDir/classes")
+            testOutputDir file("$buildDir/test/classes")
+            inheritOutputDirs = false
+        }
+    }
+
+    java {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    compileJava.options.encoding = 'UTF-8'
+
+
+    dependencies {
+        compileOnly 'org.projectlombok:lombok:1.18.12'
+    }
+}
+
+def applyPlugins(project) {
+    project.apply plugin: 'idea'
+    project.apply plugin: 'maven-publish'
+
+    if(isLibrary(project)) {
+        project.apply plugin: 'java-library'
+    } else {
+        project.apply plugin: 'java'
+    }
+}
+
+def isLibrary(project) {
+    return frameworkModules.split(',').contains(project.name)
+}
