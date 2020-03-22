@@ -6,11 +6,16 @@
  */
 package gras.presley.example.bean;
 
+import gras.presley.metadata.BeanClass;
+import gras.presley.metadata.BeanProp;
+
 /**
  * @version $Revision$ $LastChangedDate$ 
  * @author $Author$
  */
+@BeanClass(label = "Team")
 public class Team {
 
+    @BeanProp
     public String name;
 }
