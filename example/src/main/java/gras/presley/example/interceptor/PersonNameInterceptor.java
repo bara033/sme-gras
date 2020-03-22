@@ -7,6 +7,7 @@
 package gras.presley.example.interceptor;
 
 import gras.presley.example.bean.Person;
+import gras.presley.interceptor.InterceptorDef;
 import gras.presley.interceptor.PropertyDef;
 import gras.presley.interceptor.PropertyInterceptor;
 import gras.presley.interceptor.PropertyInvocation;
@@ -18,6 +19,7 @@ import gras.presley.interceptor.PropertyInvocation;
 public class PersonNameInterceptor implements PropertyInterceptor<Person, String> {
 
     @Override
+    @InterceptorDef()
     @PropertyDef(name = {"firstName", "lastName"})
     public void intercept(PropertyInvocation<Person, String> invocation) throws Exception {
         invocation.proceed(); // call the next interceptor

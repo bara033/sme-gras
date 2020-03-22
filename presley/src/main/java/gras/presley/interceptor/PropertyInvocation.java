@@ -59,6 +59,6 @@ public class PropertyInvocation<_B, _P> {
                 break;
         }
 
-        nextInterceptor.getInstance().intercept(this);
+        nextInterceptor.getInterceptor().intercept(this);
     }
 }

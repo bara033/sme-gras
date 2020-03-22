@@ -40,6 +40,8 @@ public class PlainBeanProp<_B, _P> implements Serializable {
     @NonNull private final BeanType<_B> beanType;
     protected int index; // should not change, but we need to set them for un-indexed properties
     @NonNull private final String propertyName;
+    private String simplePropertyName;
+    private String qualifiedPropertyName;
 
     private final Field field;
     private final Method getter;
@@ -117,9 +119,34 @@ public class PlainBeanProp<_B, _P> implements Serializable {
         this.index = index;
     }
 
+    /**
+     * Gets the none null technical property name which is always interned for PlainBeanProp instances.
+     */
     @NonNull
     public final String getPropertyName() {
         return propertyName;
+    }
+
+    /**
+     * Returns the java beans property name incl simple type name. e.g.: Person.name
+     * NOTE this is used in preferences and other settings like annotations.
+     * @return the none null simple qualified name of the property
+     */
+    @NonNull
+    public final String getSimplePropertyName() {
+        if (simplePropertyName == null)
+            simplePropertyName = getBeanType().getSimpleName() + '.' + getPropertyName();
+        return simplePropertyName;
+    }
+
+    /**
+     * Returns the java beans property name incl type name. e.g.: com.org.Person.name
+     * @return the fully qualified name of the property
+     */
+    public final String getQualifiedPropertyName() {
+        if (qualifiedPropertyName == null)
+            qualifiedPropertyName = getBeanType().getTypeName() + '.' + getPropertyName();
+        return qualifiedPropertyName;
     }
 
     public final String getLabel() {

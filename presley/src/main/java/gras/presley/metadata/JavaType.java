@@ -10,10 +10,7 @@ import lombok.NonNull;
 
 import java.io.*;
 import java.lang.annotation.Annotation;
-import java.util.Collection;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
+import java.util.*;
 
 /**
  * Describes a Java type, including simple types, lists, bean types, etc.
@@ -28,6 +25,28 @@ public class JavaType<_O> implements Serializable {
 
     @NonNull private final Class<_O> javaType;
     @NonNull private final String simpleName;
+
+    private static final IdentityHashMap<JavaType, JavaType> primitive2Wrapper = new IdentityHashMap<>(10);
+    private static final IdentityHashMap<JavaType, JavaType> wrapper2Primitive = new IdentityHashMap<>(10);
+
+    static {
+        // primitive types and wrapper types
+        Class map[] = {
+                Integer.class,  int.class,
+                Short.class,    short.class,
+                Byte.class,     byte.class,
+                Boolean.class,  boolean.class,
+                Float.class,    float.class,
+                Double.class,   double.class,
+                Character.class, char.class,
+                Long.class,     long.class
+        };
+
+        for (int i = 0, n = map.length; i < n; i += 2) {
+            wrapper2Primitive.put(TypeManager.forClass(map[i]), TypeManager.forClass(map[i + 1]));
+            primitive2Wrapper.put(TypeManager.forClass(map[i + 1]), TypeManager.forClass(map[i]));
+        }
+    }
 
     JavaType(Class<_O> javaType) {
         this.javaType = javaType;
@@ -114,6 +133,31 @@ public class JavaType<_O> implements Serializable {
      */
     public final <_A extends Annotation> _A getAnnotation(Class<_A> annoClass) {
         return javaType.getAnnotation(annoClass);
+    }
+
+    /**
+     * Gets if this instance represents a primitive java type.
+     */
+    public final boolean isPrimitive() {
+        return javaType.isPrimitive();
+    }
+
+    /**
+     * Returns this instance or the wrapper type if this is a primitive type.
+     */
+    @NonNull
+    public final JavaType getWrapperType() {
+        JavaType t = primitive2Wrapper.get(this);
+        return t == null ? this : t;
+    }
+
+    /**
+     * Returns this instance or the primitive type if this is a wrapper type.
+     */
+    @NonNull
+    public final JavaType getPrimitiveType() {
+        JavaType t = wrapper2Primitive.get(this);
+        return t == null ? this : t;
     }
 
     static final class SerialReplacement implements Serializable {

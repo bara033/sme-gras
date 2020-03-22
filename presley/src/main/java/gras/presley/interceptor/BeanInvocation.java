@@ -53,6 +53,6 @@ public class BeanInvocation<_B> {
                 break;
         }
 
-        nextInterceptor.getInstance().intercept(this);
+        nextInterceptor.getInterceptor().intercept(this);
     }
 }

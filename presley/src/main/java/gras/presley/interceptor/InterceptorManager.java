@@ -56,6 +56,7 @@ public class InterceptorManager {
                     supportedInterceptors.add(interceptor);
             }
 
+            supportedInterceptors.sort(InterceptorPosition.interceptorInfoComparator);
             interceptors = new ReadOnlyList<>(supportedInterceptors);
             MetadataAccess.setInterceptors(beanMetadata, interceptors);
         }
@@ -90,6 +91,7 @@ public class InterceptorManager {
                     supportedInterceptors.add(interceptor);
             }
 
+            supportedInterceptors.sort(InterceptorPosition.interceptorInfoComparator);
             interceptors = new ReadOnlyList<>(supportedInterceptors);
             MetadataAccess.setInterceptors(propertyMetadata, new ReadOnlyList<>(interceptors));
         }
